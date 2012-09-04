@@ -45,52 +45,6 @@ $(function() {
         '[Gun] Single row': [[0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],[9,0],[10,0],[11,0],[12,0],[13,0],[17,0],[18,0],[19,0],[26,0],[27,0],[28,0],[29,0],[30,0],[31,0],[32,0],[34,0],[35,0],[36,0],[37,0],[38,0]]
     };
 
-    /*var add_functions = {
-
-        'Block Engine': function(x, y) {
-            GRID[x+6][y] = true;
-            GRID[x+4][y+1] = true;
-            GRID[x+6][y+1] = true;
-            GRID[x+7][y+1] = true;
-            GRID[x+4][y+2] = true;
-            GRID[x+6][y+2] = true;
-            GRID[x+4][y+3] = true;
-            GRID[x+2][y+4] = true;
-            GRID[x][y+5] = true;
-            GRID[x+2][y+5] = true;
-        },
-        'Single Line Gun': function(x, y) {
-            GRID[x][y] = true;
-            GRID[x+1][y] = true;
-            GRID[x+2][y] = true;
-            GRID[x+3][y] = true;
-            GRID[x+4][y] = true;
-            GRID[x+5][y] = true;
-            GRID[x+6][y] = true;
-            GRID[x+7][y] = true;
-            GRID[x+9][y] = true;
-            GRID[x+10][y] = true;
-            GRID[x+11][y] = true;
-            GRID[x+12][y] = true;
-            GRID[x+13][y] = true;
-            GRID[x+17][y] = true;
-            GRID[x+18][y] = true;
-            GRID[x+19][y] = true;
-            GRID[x+26][y] = true;
-            GRID[x+27][y] = true;
-            GRID[x+28][y] = true;
-            GRID[x+29][y] = true;
-            GRID[x+30][y] = true;
-            GRID[x+31][y] = true;
-            GRID[x+32][y] = true;
-            GRID[x+34][y] = true;
-            GRID[x+35][y] = true;
-            GRID[x+36][y] = true;
-            GRID[x+37][y] = true;
-            GRID[x+38][y] = true;
-        },
-    };*/
-
     var types = new Array();
     for (var name in figures) {
         types.push(name);
