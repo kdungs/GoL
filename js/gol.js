@@ -193,7 +193,7 @@ $(function() {
                 /* Evaluate rules. */
                 if (GRID[x][y]) {
                     /* (x, y) is a live cell. */
-                    if (num_neighbours < 2 || num_neighbours > 3) {
+                    if (num_neighbours < 2 || num_neighbours > 3) {
                         /* Too few or too many neighbours -> Cell dies. */
                         new_grid[x][y] = false;
                     } else {
