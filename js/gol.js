@@ -147,20 +147,16 @@ $(function() {
 
         if (canvas.getContext) {
             c = canvas.getContext('2d');
-
-            /* Adjust canvas size... */
+            /* Adjust canvas size. */
             var w, h;
             w = $(document).width();
             h = $(document).height();
             dim = w < h? w: h;
             dim -= 54;
-
             canvas.width = dim;
             canvas.height = dim;
-
             $('#GoL').innerWidth(dim);
             $('#GoL').innerHeight(dim);
-
             blocksize = dim/DIM;
 
             /* Clear canvas. */
@@ -171,7 +167,6 @@ $(function() {
             for (var x=0; x<GRID.length; x++) {
                 for (var y=0; y<GRID[x].length; y++) {
                     if (GRID[x][y]) {
-                        //c.fillRect(x*blocksize+1, y*blocksize+1, blocksize-1, blocksize-1);
                         c.fillRect(x*blocksize, y*blocksize, blocksize, blocksize);
                     }
                 }
