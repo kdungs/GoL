@@ -153,7 +153,7 @@ $(function() {
             w = $(document).width();
             h = $(document).height();
             dim = w < h? w: h;
-            dim -= 104;
+            dim -= 54;
 
             canvas.width = dim;
             canvas.height = dim;
