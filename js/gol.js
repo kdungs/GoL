@@ -14,19 +14,22 @@ $(function() {
         }
     }
 
+    /*
+    // Manual figures
+    // Commented out since external figures from js/collection.js are used.
     var figures = {
         'Single Cell': [[0,0]],
-        /* Stationaries */
+        // Stationaries
         '[Stationary] Block': [[0,0],[0,1],[1,0],[1,1]],
         '[Stationary] Beehive': [[1,0],[2,0],[0,1],[3,1],[1,2],[2,2]],
         '[Stationary] Loaf': [[0,1],[1,0],[1,2],[2,0],[2,3],[3,1],[3,2]],
         '[Stationary] Boat': [[0,0],[0,1],[1,0],[1,2],[2,1]],
-        /* Oscillators */
+        // Oscillators
         '[Oscillator] Blinker (horiz.)': [[0,0],[1,0],[2,0]],
         '[Oscillator] Blinker (vert.)': [[0,0],[0,1],[0,2]],
         '[Oscillator] Toad': [[1,0],[2,0],[3,0],[0,1],[1,1],[2,1]],
         '[Oscillator] Beacon': [[0,0],[0,1],[1,0],[1,1],[2,2],[2,3],[3,2],[3,3]],
-        /* Spaceships */
+        // Spaceships
         '[Spaceship] Glider (NE)': [[0,0],[1,0],[2,0],[2,1],[1,2]],
         '[Spaceship] Glider (NW)': [[0,0],[1,0],[2,0],[0,1],[1,2]],
         '[Spaceship] Glider (SE)': [[0,2],[1,0],[1,2],[2,2],[2,1]],
@@ -34,25 +37,29 @@ $(function() {
         '[Spaceship] LWSS (E)': [[4,1],[4,2],[4,3],[3,0],[3,3],[2,3],[1,3],[0,0],[0,2]],
         '[Spaceship] LWSS (W)': [[0,1],[0,2],[0,3],[1,0],[1,3],[2,3],[3,3],[4,0],[4,2]],
         '[Spaceship] LWSS (N)': [[0,0],[0,1],[0,2],[0,3],[1,0],[1,4],[2,0],[3,1],[3,4]],
-        /* Methuselahs */
+        // Methuselahs
         '[Methuselah] F-pentomino': [[0,1],[1,0],[1,1],[1,2],[2,0]],
         '[Methuselah] Diehard': [[0,1],[1,1],[1,2],[5,2],[6,0],[6,2],[7,2]],
         '[Methuselah] Acorn': [[0,2],[1,0],[1,2],[3,1],[4,2],[5,2],[6,2]],
-        /* Guns */
+        // Guns
         '[Gun] Gosper glider gun': [[0,4],[0,5],[1,4],[1,5],[10,4],[10,5],[10,6],[11,3],[11,7],[12,2],[12,8],[13,2],[13,8],[14,5],[15,3],[15,7],[16,4],[16,5],[16,6],[17,5],[20,2],[20,3],[20,4],[21,2],[21,3],[21,4],[22,1],[22,5],[24,0],[24,1],[24,5],[24,6],[34,3],[34,4],[35,3],[35,4]],
         '[Gun] Minimal (10 cell)': [[0,5],[2,4],[2,5],[4,1],[4,2],[4,3],[6,0],[6,1],[6,2],[7,1]],
         '[Gun] 5x5': [[0,0],[0,1],[0,4],[1,0],[1,3],[2,0],[2,3],[2,4],[3,2],[4,0],[4,2],[4,3],[4,4]],
-        '[Gun] Single row': [[0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],[9,0],[10,0],[11,0],[12,0],[13,0],[17,0],[18,0],[19,0],[26,0],[27,0],[28,0],[29,0],[30,0],[31,0],[32,0],[34,0],[35,0],[36,0],[37,0],[38,0]]
+        '[Gun] Single row': [[0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],[9,0],[10,0],[11,0],[12,0],[13,0],[17,0],[18,0],[19,0],[26,0],[27,0],[28,0],[29,0],[30,0],[31,0],[32,0],[34,0],[35,0],[36,0],[37,0],[38,0]],
     };
+    */
 
-    var types = new Array();
+    // Use figures from js/collection.js
+    var figures = COLLECTION;
+
+    var names = new Array();
     for (var name in figures) {
-        types.push(name);
+        names.push(name);
     }
 
-    $('#InputType').typeahead({
-        source: types,
-        items: 14,
+    $('#InputFigure').typeahead({
+        source: names,
+        items: 12,
         minLength: 0
     });
 
@@ -84,21 +91,23 @@ $(function() {
     });
 
     $('#ButtonAdd').click(function(evt) {
-        var item, x, y;
-        item = $('#InputType').val();
+        var figure, x, y;
+        figure = $('#InputFigure').val();
         x = parseInt($('#InputX').val());
         y = parseInt($('#InputY').val());
 
         if (x < 0 || x >= DIM || y < 0 || y >= DIM) {
             alert('Invalid position!');
+        } else if (figure === '') {
+            alert('No figure');
         } else {
-            var data = figures[item];
-            console.log(data);
-            if (data) {
-                for (d in data) {
-                    console.log(d);
-                    GRID[x+data[d][0]][y+data[d][1]] = true;
+            var coordinates = figures[figure];
+            if (coordinates) {
+                for (c in coordinates) {
+                    GRID[x+coordinates[c][0]][y+coordinates[c][1]] = true;
                 }
+            } else {
+                alert('Not a valid figure.');
             }
         }
 

@@ -9,6 +9,7 @@ The code ist experimental. User-input is not always checked for validity. The wh
 
  * [Bootstrap by Twitter](http://twitter.github.com/bootstrap/), licensed under the [Apache License v2.0](http://www.apache.org/licenses/LICENSE-2.0)
  * [JQuery](http://jquery.org), licensed under the [MIT License](https://github.com/jquery/jquery/blob/master/MIT-LICENSE.txt)
+ * Collection of figures from [LifeWiki](http://www.conwaylife.com/wiki/Main_Page)
 
 ## License
 All of the code that is not from an external source and therefore written by me is licensed under the terms of the [MIT License](http://opensource.org/licenses/mit-license.php). 
