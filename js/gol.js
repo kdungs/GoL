@@ -1,21 +1,21 @@
-$(function() {
+$(function () {
+    "use strict";
 
-    /* Setup */
+    // --- Setup ---
     var DIM = 160,
         PLAYING = false,
-        GRID = new Array(),
+        GRID = [],
         COLOR = '#00ff00',
         TIMEOUT = 100;
 
     for (var x=0; x<DIM; x++) {
-        GRID[x] = new Array();
+        GRID[x] = [];
         for (var y=0; y<DIM; y++) {
             GRID[x][y] = false;
         }
     }
 
-    /*
-    // Manual figures
+    /*// Manual figures
     // Commented out since external figures from js/collection.js are used.
     var figures = {
         'Single Cell': [[0,0]],
@@ -46,15 +46,16 @@ $(function() {
         '[Gun] Minimal (10 cell)': [[0,5],[2,4],[2,5],[4,1],[4,2],[4,3],[6,0],[6,1],[6,2],[7,1]],
         '[Gun] 5x5': [[0,0],[0,1],[0,4],[1,0],[1,3],[2,0],[2,3],[2,4],[3,2],[4,0],[4,2],[4,3],[4,4]],
         '[Gun] Single row': [[0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],[9,0],[10,0],[11,0],[12,0],[13,0],[17,0],[18,0],[19,0],[26,0],[27,0],[28,0],[29,0],[30,0],[31,0],[32,0],[34,0],[35,0],[36,0],[37,0],[38,0]],
-    };
-    */
+    };*/
 
     // Use figures from js/collection.js
     var figures = COLLECTION;
 
-    var names = new Array();
+    var names = [];
     for (var name in figures) {
-        names.push(name);
+        if (figures.hasOwnProperty(name)) {
+            names.push(name); 
+        }
     }
 
     $('#InputFigure').typeahead({
@@ -63,13 +64,13 @@ $(function() {
         minLength: 0
     });
 
-    /* Event handlers */
-    $('#ButtonSettingsSave').click(function(evt) {
+    // --- Event handlers ---
+    $('#ButtonSettingsSave').click(function() {
         var bg, color, timeout, dim;
         bg = $('#InputBackground').val();
         color = $('#InputColor').val();
-        timeout = parseInt($('#InputTimeout').val());
-        dim = parseInt($('#InputDim').val());
+        timeout = parseInt($('#InputTimeout').val(), 10);
+        dim = parseInt($('#InputDim').val(), 10);
 
         $('#GoL').css('background-color', bg);
         COLOR = color;
@@ -77,9 +78,9 @@ $(function() {
 
         if (dim !== DIM) {
             DIM = dim;
-            delete GRID;
+            GRID = [];
             for (var x=0; x<DIM; x++) {
-                GRID[x] = new Array();
+                GRID[x] = [];
                 for (var y=0; y<DIM; y++) {
                     GRID[x][y] = false;
                 }
@@ -90,11 +91,11 @@ $(function() {
         $('#ModalSettings').modal('hide');
     });
 
-    $('#ButtonAdd').click(function(evt) {
+    $('#ButtonAdd').click(function() {
         var figure, x, y;
         figure = $('#InputFigure').val();
-        x = parseInt($('#InputX').val());
-        y = parseInt($('#InputY').val());
+        x = parseInt($('#InputX').val(), 10);
+        y = parseInt($('#InputY').val(), 10);
 
         if (x < 0 || x >= DIM || y < 0 || y >= DIM) {
             alert('Invalid position!');
@@ -103,19 +104,19 @@ $(function() {
         } else {
             var coordinates = figures[figure];
             if (coordinates) {
-                for (c in coordinates) {
-                    GRID[x+coordinates[c][0]][y+coordinates[c][1]] = true;
+                for (var i=0; i<coordinates.length; i++) {
+                    GRID[x+coordinates[i][0]][y+coordinates[i][1]] = true;
                 }
             } else {
                 alert('Not a valid figure.');
             }
         }
 
-        $('#ModalAdd').modal('hide')
+        $('#ModalAdd').modal('hide');
         draw();
     });
 
-    $('#ButtonClear').click(function(evt) {
+    $('#ButtonClear').click(function() {
         for (var x=0; x<GRID.length; x++) {
             for (var y=0; y<GRID[x].length; y++) {
                 GRID[x][y] = false;
@@ -124,7 +125,7 @@ $(function() {
         draw();
     });
 
-    $('#TogglePlay').click(function(evt) {
+    $('#TogglePlay').click(function() {
         if (PLAYING) {
             PLAYING = false;
         } else {
@@ -133,13 +134,13 @@ $(function() {
         }
     });
 
-    $('#ButtonStep').click(function(evt) {
+    $('#ButtonStep').click(function() {
         step();
         draw();
     });
 
 
-    /* Functions */
+    // --- Functions ---
     function draw() {
         var canvas = document.getElementById('GoL'),
             $gol = $('#GoL'),
@@ -155,14 +156,14 @@ $(function() {
             dim -= 54;
             canvas.width = dim;
             canvas.height = dim;
-            $('#GoL').innerWidth(dim);
-            $('#GoL').innerHeight(dim);
+            $gol.innerWidth(dim);
+            $gol.innerHeight(dim);
             blocksize = dim/DIM;
 
-            /* Clear canvas. */
+            //Clear canvas.
             canvas.width = canvas.width;
             
-            /* Print GRID to canvas. */
+            // Print GRID to canvas.
             c.fillStyle = COLOR;
             for (var x=0; x<GRID.length; x++) {
                 for (var y=0; y<GRID[x].length; y++) {
@@ -175,49 +176,38 @@ $(function() {
     }
 
     function step() {
-        var new_grid = new Array(),
+        var buffer_last,
+            buffer_current,
             num_neighbours;
+
         for (var x=0; x<GRID.length; x++) {
-            new_grid[x] = new Array();
-            for(var y=0; y<GRID[x].length; y++) {
-                /* Count live neighbours. */
+            buffer_last = buffer_current;
+            buffer_current = GRID[x].slice();
+
+            for (var y=0; y<buffer_current.length; y++) {
+                // Count neighbours.
                 num_neighbours = 0;
-                if (GRID[x-1]) {
-                    if (GRID[x-1][y-1]) num_neighbours++;
-                    if (GRID[x-1][y]) num_neighbours++;
-                    if (GRID[x-1][y+1]) num_neighbours++;
+                // Row to the left.
+                if (buffer_last) {
+                    if (buffer_last[y-1]) {num_neighbours++;}
+                    if (buffer_last[y]) {num_neighbours++;}
+                    if (buffer_last[y+1]) {num_neighbours++;}
                 }
-                if (GRID[x][y-1]) num_neighbours++;
-                if (GRID[x][y+1]) num_neighbours++;
+                // This row.
+                if (buffer_current[y-1]) {num_neighbours++;}
+                if (buffer_current[y+1]) {num_neighbours++;}
+                // Row to the right.
                 if (GRID[x+1]) {
-                    if (GRID[x+1][y-1]) num_neighbours++;
-                    if (GRID[x+1][y]) num_neighbours++;
-                    if (GRID[x+1][y+1]) num_neighbours++;
+                    if (GRID[x+1][y-1]) {num_neighbours++;}
+                    if (GRID[x+1][y]) {num_neighbours++;}
+                    if (GRID[x+1][y+1]) {num_neighbours++;}
                 }
-                /* Evaluate rules. */
-                if (GRID[x][y]) {
-                    /* (x, y) is a live cell. */
-                    if (num_neighbours < 2 || num_neighbours > 3) {
-                        /* Too few or too many neighbours -> Cell dies. */
-                        new_grid[x][y] = false;
-                    } else {
-                        /* 2 or 3 neighbours -> Cell survives. */
-                        new_grid[x][y] = true;
-                    }
-                } else {
-                    /* (x, y) is a dead cell. */
-                    if (num_neighbours === 3) {
-                        /* New cell by reproduction. */
-                        new_grid[x][y] = true;
-                    } else {
-                        /* No reproduction, cell stays dead. */
-                        new_grid[x][y] = false;
-                    }
+                // Apply rules (shortened - only changes)
+                if ((buffer_current[y] && num_neighbours !== 2 && num_neighbours !== 3) || (!buffer_current[y] && num_neighbours === 3)) {
+                    GRID[x][y] = !buffer_current[y];
                 }
             }
         }
-        delete GRID;
-        GRID = new_grid;
     }
 
     function play() {
