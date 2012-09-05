@@ -15,9 +15,8 @@ $(function () {
         }
     }
 
-    /*// Manual figures
-    // Commented out since external figures from js/collection.js are used.
-    var figures = {
+    // Manual figures
+    var manual_figures = {
         'Single Cell': [[0,0]],
         // Stationaries
         '[Stationary] Block': [[0,0],[0,1],[1,0],[1,1]],
@@ -37,6 +36,7 @@ $(function () {
         '[Spaceship] LWSS (E)': [[4,1],[4,2],[4,3],[3,0],[3,3],[2,3],[1,3],[0,0],[0,2]],
         '[Spaceship] LWSS (W)': [[0,1],[0,2],[0,3],[1,0],[1,3],[2,3],[3,3],[4,0],[4,2]],
         '[Spaceship] LWSS (N)': [[0,0],[0,1],[0,2],[0,3],[1,0],[1,4],[2,0],[3,1],[3,4]],
+        '[Spaceship] LWSS (S)': [[0,4],[0,3],[0,2],[0,1],[1,4],[1,0],[2,4],[3,3],[3,0]],
         // Methuselahs
         '[Methuselah] F-pentomino': [[0,1],[1,0],[1,1],[1,2],[2,0]],
         '[Methuselah] Diehard': [[0,1],[1,1],[1,2],[5,2],[6,0],[6,2],[7,2]],
@@ -46,26 +46,18 @@ $(function () {
         '[Gun] Minimal (10 cell)': [[0,5],[2,4],[2,5],[4,1],[4,2],[4,3],[6,0],[6,1],[6,2],[7,1]],
         '[Gun] 5x5': [[0,0],[0,1],[0,4],[1,0],[1,3],[2,0],[2,3],[2,4],[3,2],[4,0],[4,2],[4,3],[4,4]],
         '[Gun] Single row': [[0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],[9,0],[10,0],[11,0],[12,0],[13,0],[17,0],[18,0],[19,0],[26,0],[27,0],[28,0],[29,0],[30,0],[31,0],[32,0],[34,0],[35,0],[36,0],[37,0],[38,0]],
-    };*/
+    };
 
-    // Use figures from js/collection.js
-    var figures = COLLECTION;
+    // Use manual figures and figures from js/collection.js
+    var figures = $.extend({}, manual_figures, COLLECTION);
 
-    var names = [];
-    for (var name in figures) {
-        if (figures.hasOwnProperty(name)) {
-            names.push(name); 
-        }
-    }
-
-    $('#InputFigure').typeahead({
-        source: names,
-        items: 12,
-        minLength: 0
+    // Add options to <select>
+    $.each(figures, function(name, coordinates) {
+        $('#SelectFigure').append($('<option></option>').val(name).html(name));
     });
 
     // --- Event handlers ---
-    $('#ButtonSettingsSave').click(function() {
+    $('#ButtonSettingsSave').click(function () {
         var bg, color, timeout, dim;
         bg = $('#InputBackground').val();
         color = $('#InputColor').val();
@@ -91,9 +83,9 @@ $(function () {
         $('#ModalSettings').modal('hide');
     });
 
-    $('#ButtonAdd').click(function() {
+    $('#ButtonAdd').click(function () {
         var figure, x, y;
-        figure = $('#InputFigure').val();
+        figure = $('#SelectFigure').val();
         x = parseInt($('#InputX').val(), 10);
         y = parseInt($('#InputY').val(), 10);
 
@@ -116,7 +108,7 @@ $(function () {
         draw();
     });
 
-    $('#ButtonClear').click(function() {
+    $('#ButtonClear').click(function () {
         for (var x=0; x<GRID.length; x++) {
             for (var y=0; y<GRID[x].length; y++) {
                 GRID[x][y] = false;
@@ -125,7 +117,7 @@ $(function () {
         draw();
     });
 
-    $('#TogglePlay').click(function() {
+    $('#TogglePlay').click(function () {
         if (PLAYING) {
             PLAYING = false;
         } else {
@@ -134,20 +126,38 @@ $(function () {
         }
     });
 
-    $('#ButtonStep').click(function() {
+    $('#ButtonStep').click(function () {
         step();
         draw();
     });
 
+    $('#ButtonFullscreen').click(function () {
+        var $gol = $('#GoL');
+        $gol = $gol[0];
+        $gol.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+        $gol.mozRequestFullScreen();
+    });
+
+    // This is a little handier in fullscreen mode
+    $('#GoL').click(function () {
+        if (PLAYING) {
+            PLAYING = false;
+            $('#TogglePlay').removeClass('active');
+        } else {
+            PLAYING = true;
+            $('#TogglePlay').addClass('active');
+            play();
+        }
+    });
 
     // --- Functions ---
-    function draw() {
-        var canvas = document.getElementById('GoL'),
-            $gol = $('#GoL'),
-            c, dim, blocksize;
+    function draw () {
+        var $gol = $('#GoL'),
+            canvas, context, dim, blocksize;
 
+        canvas = $gol[0];
         if (canvas.getContext) {
-            c = canvas.getContext('2d');
+            context = canvas.getContext('2d');
             /* Adjust canvas size. */
             var w, h;
             w = $(document).width();
@@ -164,18 +174,18 @@ $(function () {
             canvas.width = canvas.width;
             
             // Print GRID to canvas.
-            c.fillStyle = COLOR;
+            context.fillStyle = COLOR;
             for (var x=0; x<GRID.length; x++) {
                 for (var y=0; y<GRID[x].length; y++) {
                     if (GRID[x][y]) {
-                        c.fillRect(x*blocksize, y*blocksize, blocksize, blocksize);
+                        context.fillRect(x*blocksize, y*blocksize, blocksize, blocksize);
                     }
                 }
             }
         }
     }
 
-    function step() {
+    function step () {
         var buffer_last,
             buffer_current,
             num_neighbours;
@@ -210,7 +220,7 @@ $(function () {
         }
     }
 
-    function play() {
+    function play () {
         step();
         draw();
         if (PLAYING) {
