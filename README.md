@@ -1,15 +1,7 @@
-# GoL
+# GoL::converter
 ## Game of Life
 
-A simple JavaScript implementation of Conway's "Game of Life".
-
-The code ist experimental. User-input is not always checked for validity. The whole thing is more of a proof-of-concept.
-
-## External libraries
-
- * [Bootstrap by Twitter](http://twitter.github.com/bootstrap/), licensed under the [Apache License v2.0](http://www.apache.org/licenses/LICENSE-2.0)
- * [JQuery](http://jquery.org), licensed under the [MIT License](https://github.com/jquery/jquery/blob/master/MIT-LICENSE.txt)
- * Collection of figures from [LifeWiki](http://www.conwaylife.com/wiki/Main_Page)
+A converter for .cells files. Converts .cells files into .json files that can be used with GoL. Also has an option to collect many figures from several files.
 
 ## License
 All of the code that is not from an external source and therefore written by me is licensed under the terms of the [MIT License](http://opensource.org/licenses/mit-license.php). 
