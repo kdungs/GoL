@@ -3,6 +3,7 @@ $(function () {
 
     // --- Setup ---
     var DIM = 160,
+        BLOCKSIZE = undefined,
         PLAYING = false,
         GRID = [],
         COLOR = '#00ff00',
@@ -137,23 +138,30 @@ $(function () {
         $gol.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
         $gol.mozRequestFullScreen();
     });
+    
+    // Place cells with the mouse
+    $('#GoL').click(function(evt) {
+        var x = Math.floor(evt.offsetX/BLOCKSIZE),
+            y = Math.floor(evt.offsetY/BLOCKSIZE);
+        GRID[x][y] = !GRID[x][y];
+        draw();
+    });
 
-    // This is a little handier in fullscreen mode
-    $('#GoL').click(function () {
-        if (PLAYING) {
-            PLAYING = false;
-            $('#TogglePlay').removeClass('active');
-        } else {
-            PLAYING = true;
-            $('#TogglePlay').addClass('active');
-            play();
+    // Experimental
+    $('#ButtonRandom').click(function() {
+        var num = 1000, x, y;
+        for (var i=0; i < num; i++) {
+            x = Math.floor(Math.random()*DIM);
+            y = Math.floor(Math.random()*DIM);
+            GRID[x][y] = true;
         }
+        draw();
     });
 
     // --- Functions ---
     function draw () {
         var $gol = $('#GoL'),
-            canvas, context, dim, blocksize;
+            canvas, context, dim;
 
         canvas = $gol[0];
         if (canvas.getContext) {
@@ -168,7 +176,7 @@ $(function () {
             canvas.height = dim;
             $gol.innerWidth(dim);
             $gol.innerHeight(dim);
-            blocksize = dim/DIM;
+            BLOCKSIZE = dim/DIM;
 
             //Clear canvas.
             canvas.width = canvas.width;
@@ -178,7 +186,7 @@ $(function () {
             for (var x=0; x<GRID.length; x++) {
                 for (var y=0; y<GRID[x].length; y++) {
                     if (GRID[x][y]) {
-                        context.fillRect(x*blocksize, y*blocksize, blocksize, blocksize);
+                        context.fillRect(x*BLOCKSIZE, y*BLOCKSIZE, BLOCKSIZE, BLOCKSIZE);
                     }
                 }
             }
