@@ -1,0 +1,13 @@
+#GoL {
+    background: #333;
+    cursor: pointer;
+    margin: 50px 0 0 0;
+}
+
+#GoL:-webkit-full-screen {
+    margin: 0 !important;
+}
+
+#GoL:-moz-full-screen {
+    margin: 0 !important;
+}

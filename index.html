@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>game of life</title>
+    <meta charset="utf-8">
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/collection.js"></script> <!-- Import collection of figures -->
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="css/gol.css" rel="stylesheet">
+
+    <link href="img/gol.ico" rel="icon">
+</head>
+<body>
+
+    <nav class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <a class="brand" href="#">
+                    <img style="vertical-align: baseline;" src="img/gol.png">
+                    Game of Life
+                </a>
+                <ul class="nav">
+                    <li><a href="#ModalSettings" data-toggle="modal"><i class="icon-cog"></i> Settings</a></li>
+                    <li><a href="#ModalAdd" data-toggle="modal"><i class="icon-plus"></i> Add…</a></li>
+                    <li><a href="#" role="button" id="ButtonClear"><i class="icon-fire"></i> Clear</a></li>
+                    <!-- Experimental --><li><a href="#" role="button" id="ButtonRandom"><i class="icon-leaf"></i> Random</a></li>
+                </ul>
+                <div class="btn-group pull-right">
+                    <button class="btn btn-primary" data-toggle="button" id="TogglePlay"><i class="icon-white icon-play"></i> Play</button>
+                    <button class="btn" id="ButtonStep"><i class="icon-step-forward"></i> Step</button>
+                    <button class="btn" id="ButtonFullscreen"><i class="icon-resize-full"></i> Fullscreen</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="container-fluid">
+        <div class="row-fluid">
+            <canvas id="GoL" class="span12"></canvas>
+        </div>
+    </section>
+
+    <aside id="ModalSettings" class="modal hide fade">
+        <header class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Settings</h3>
+        </header>
+        <section class="modal-body">
+            <fieldset>
+                <p>
+                    <label for="InputBackground">Background</label>
+                    <input type="color" id="InputBackground" value="#333333">
+                </p>
+                <p>
+                    <label for="InputColor">Color</label>
+                    <input type="color" id="InputColor" value="#00FF00">
+                </p>
+                <p>
+                    <label for"InputTimeout">Timeout</label>
+                    <input type="number" min="0" step="1" id="InputTimeout" value="100">
+                </p>
+                <p>
+                    <label for="InputDim">Dimension</label>
+                    <input type="number" min="10" step="5" id="InputDim" value="160">
+                </p>
+            </fieldset>
+        </section>
+        <footer class="modal-footer">
+            <button class="btn btn-primary" id="ButtonSettingsSave"><i class="icon-white icon-plus"></i> Save settings!</button>
+        </footer>
+    </aside>
+
+    <aside id="ModalAdd" class="modal hide fade">
+        <header class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Add…</h3>
+        </header>
+        <section class="modal-body">
+            <p>
+                <label for="SelectFigure">Place figure</label> <select id="SelectFigure"></select> at x = <input class="input input-small" type="number" step="1" id="InputX" value="0">, y = <input class="input input-small" type="number" step="1" id="InputY" value="0">
+            </p>
+            <p>
+
+            </p>
+        </section>
+        <footer class="modal-footer">
+            <button class="btn btn-primary" id="ButtonAdd"><i class="icon-white icon-plus"></i> Add!</button>
+        </footer>
+    </aside>
+
+    <!-- Load Game of Life -->
+    <script src="js/gol.js"></script>
+</body>
+</html>
